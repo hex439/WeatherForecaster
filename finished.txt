@@ -1,0 +1,97 @@
+package projects.weatherforecaster;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+public class MainActivity extends AppCompatActivity {
+
+    private final String city = "Cairns,au";
+    private final String api = "15c50ca47bb11c7c3e7f90582de67a37";
+    private static final String TAG = "MyActivity";
+    DecimalFormat df = new DecimalFormat("#.##");
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        getWeather();
+    }
+
+    public void getWeather() {
+
+        String link = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric&appid=" + api;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, link, response -> {
+
+            try {
+                JSONObject jsonObject = new JSONObject(response);
+                JSONObject main = jsonObject.getJSONObject("main");
+                JSONObject sys = jsonObject.getJSONObject("sys");
+                JSONObject wind = jsonObject.getJSONObject("wind");
+                JSONObject weather = jsonObject.getJSONArray("weather").getJSONObject(0);
+                long updatedAt = jsonObject.getLong("dt");
+                String pattern = "dd/MM/yyyy hh:mm a";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, Locale.ENGLISH);
+                String updatedAtText = "Updated at: " + simpleDateFormat.format(new Date(updatedAt * 1000));
+                String temp = main.getString("temp") + "°C";
+                String tempMin = "Min Temp: " + main.getString("temp_min") + "°C";
+                String tempMax = "Max Temp: " + main.getString("temp_max") + "°C";
+                String pressure_val = main.getString("pressure");
+                String humidity_val = main.getString("humidity");
+                long sunrise_val = sys.getLong("sunrise");
+                long sunset_val = sys.getLong("sunset");
+                String windSpeed = wind.getString("speed");
+                String weatherDescription = weather.getString("description");
+                String address = jsonObject.getString("name") + ", " + sys.getString("country");
+
+                TextView location = (TextView) findViewById(R.id.location);
+                TextView updated_at = (TextView) findViewById(R.id.updated_location);
+                TextView status = (TextView) findViewById(R.id.status);
+                TextView temperature = (TextView) findViewById(R.id.temperature);
+                TextView temp_min = (TextView) findViewById(R.id.min_temp);
+                TextView temp_max = (TextView) findViewById(R.id.max_temp);
+                TextView sunrise = (TextView) findViewById(R.id.sunrise);
+                TextView sunset = (TextView) findViewById(R.id.sunset);
+                TextView windView = (TextView) findViewById(R.id.wind);
+                TextView pressure = (TextView) findViewById(R.id.pressure);
+                TextView humidity = (TextView) findViewById(R.id.humidity);
+
+                location.setText(address);
+                updated_at.setText(updatedAtText);
+                weatherDescription = weatherDescription.substring(0, 1).toUpperCase() + weatherDescription.substring(1).toLowerCase();
+                status.setText(weatherDescription);
+                temperature.setText(temp);
+                temp_min.setText(tempMin);
+                temp_max.setText(tempMax);
+                sunrise.setText(simpleDateFormat.format(new Date(sunrise_val * 1000)));
+                sunset.setText(simpleDateFormat.format(new Date(sunset_val * 1000)));
+                pressure.setText(pressure_val);
+                humidity.setText(humidity_val);
+                windView.setText(windSpeed);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }, error -> Toast.makeText(getApplicationContext(), error.toString().trim(), Toast.LENGTH_SHORT).show());
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
+    }
+}

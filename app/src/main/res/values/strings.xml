@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">WeatherForecaster</string>
+    <string name="default_location">Location</string>
+    <string name="default_updated_location">Updated at</string>
+    <string name="default_status">Rainy</string>
+    <string name="default_temp">22°C</string>
+    <string name="default_min">Min Temp: 22.22°C</string>
+    <string name="default_max">Max Temp: 22.22°C</string>
+    <string name="description_sunrise">sunrise</string>
+    <string name="text_sunrise">Sunrise</string>
+    <string name="default_sunrise">01/01/2000 00:00 AM</string>
+    <string name="description_sunset">sunset</string>
+    <string name="text_sunset">Sunset</string>
+    <string name="default_sunset">01/01/2000 00:00 AM</string>
+    <string name="description_wind">wind</string>
+    <string name="text_wind">Wind</string>
+    <string name="default_wind">99.99</string>
+    <string name="description_pressure">pressure</string>
+    <string name="text_pressure">Pressure</string>
+    <string name="default_pressure">9999</string>
+    <string name="description_humidity">humidity</string>
+    <string name="text_humidity">Humidity</string>
+    <string name="default_humidity">100</string>
+    <string name="description_info">info</string>
+    <string name="text_info">Made by</string>
+    <string name="hex">Hex</string>
+    <string name="error_message">An error has occurred</string>
+    <string name="refresh">refresh</string>
+</resources>
